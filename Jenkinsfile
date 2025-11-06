@@ -18,6 +18,15 @@ pipeline {
         sh 'echo "All tests passed!"'
       }
     }
+    stage('Docker image build & run') {
+      steps {
+        writeFile file: 'Dockerfile', text: 'FROM alpine:3.20\nCMD ["echo","Image built & run OK"]\n'
+        sh '''
+          docker build -t jenkins-ci-test:latest .
+          docker run --rm jenkins-ci-test:latest
+        '''
+      }
+    }
   }
   post {
     success {
